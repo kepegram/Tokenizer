@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import javax.management.RuntimeErrorException;
+
 class Position {
     public final int lineNumber;
     public final int linePosition;
@@ -39,7 +41,7 @@ public class Tokenizer {
     public void next() throws IOException {
         // scan ahead for whitespace and/or comments
         while(!isEOF) {
-            if (!isWhiteSpace()) {
+            if (!isWhiteSpace() && peekNextChar() != '\n') {
                 break;
             }
             nextChar();
@@ -56,15 +58,22 @@ public class Tokenizer {
                 // call next again
                 next();
             } else {
-                StringBuilder builder = new StringBuilder();
-                startPosition = new Position(lineNumber + 1, linePosition + 1);
 
-                do {
-                    builder.append(peekNextChar());
-                } while (nextChar() && !isNextSymbol(builder.toString()));
+                if(isOperator()) {
 
-                if(builder.length() > 0) {
-                    this.currentToken = builder.toString();
+                } if(isKeyWord()) {
+
+                }else {
+                    // is identifier
+                    StringBuilder builder = new StringBuilder();
+                    startPosition = new Position(lineNumber + 1, linePosition + 1);
+                    do {
+                        builder.append(peekNextChar());
+                    } while (isValidIdentifierPartial(builder.toString()));
+
+                    if(builder.length() > 0) {
+                        this.currentToken = builder.toString();
+                    }
                 }
             }
         }
@@ -72,6 +81,7 @@ public class Tokenizer {
 
     public String kind() {
         if(this.currentToken == null) {
+            if(this.isEOF) return Tokenizer.EOF;
             throw new RuntimeException("Not ready");
         }
 
@@ -135,27 +145,57 @@ public class Tokenizer {
         return '\n';
     }
 
-    private boolean isNextSymbol(String token) {
-        // firstly if next character is whitespace or end of line
-        if(line == null || isWhiteSpace() || isSeparator()) return true;
+    private boolean isValidIdentifierPartial(String token) throws IOException {
+        // make sure there are more characters in the line
+        if(line == null) {
+            throw new RuntimeException("Not ready");
+        }
+        if(isEOF || isWhiteSpace() || !nextChar()) return false;
 
-        if(token.startsWith("(")) return true;
+        char nextChar = peekNextChar();
+
+        // rules for parsing, from the grammer
+        if(isSeparator()) return false;
+
+        // first complete symbols
+        if(isSeparator(token.charAt(0))) return false;
+
+        return true;
+    }
+
+    private boolean isWhiteSpace() {
+        return Character.isWhitespace(peekNextChar());
+    }
+
+    public static char[] SEPARATORS = {';', '(', ')', '/', '+', '-', '*'};
+
+    private boolean isSeparator(char ch) {
+        for(char sep: SEPARATORS) {
+            if(sep == ch) return true;
+        }
+        return false;
+    }
+    private boolean isSeparator() {
+        char ch = peekNextChar();
+        return isSeparator(ch);
+    }
+
+    char special[] = {':', '=', '<', '>', '!'};
+    // function to test for one of the following operators (and test next char is valid)
+    private boolean isOperator() {
+        /* 
+            AssignmentOperator  =  ":="
+            RelationalOperator  =  "<" | "=<" | "=" | "!=" | ">=" | ">"
+            AdditiveOperator  =  "+" | "-" | "or"
+            MultiplicativeOperator  =  "*" | "/" | "and"
+            UnaryOperator  =  "-" | "not"
+            BooleanLiteral  =  "false"  |  "true"
+        */
 
         return false;
     }
 
-    private boolean isWhiteSpace() {
-        return peekNextChar() == ' ';
-    }
-
-    public static char[] SEPARATORS = {';', '(', ')'};
-
-    private boolean isSeparator() {
-        char ch = peekNextChar();
-
-        for(char sep: SEPARATORS) {
-            if(sep == ch) return true;
-        }
+    private boolean isKeyWord() {
         return false;
     }
 }

@@ -7,7 +7,7 @@ public class Main
 {
     public static void main(String[] args) 
     {
-        String inputFileName = "./examples/ab.txt";
+        String inputFileName = "./examples/test.txt";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName))){
 
@@ -18,7 +18,7 @@ public class Main
             tokenizer.next();
 
             while(tokenizer.kind() != Tokenizer.EOF) {
-                String msg = String.format("%d:%d  -  (kind =\"%s\", value = \"%s\"): %s",
+                String msg = String.format("%2d:%2d  -  (kind =\"%s\", value = \"%s\"): %s",
                     tokenizer.position().lineNumber, tokenizer.position().linePosition,
                     tokenizer.kind(), tokenizer.value(), tokenizer.currentToken);
                 System.out.println(msg);
