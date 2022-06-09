@@ -198,4 +198,12 @@ public class Tokenizer {
     private boolean isKeyWord() {
         return false;
     }
+
+    private boolean isDigit() {
+        return false;
+    }
+
+    private boolean isIdentifier() {
+        return false;
+    }
 }

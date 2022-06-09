@@ -2,12 +2,28 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Main 
 {
+    private static String inputFileName;
+
     public static void main(String[] args) 
     {
-        String inputFileName = "./examples/test.txt";
+        /* String inputFileName;  = "./examples/test.txt";*/
+        try
+        {
+            Scanner input = new Scanner(System.in);
+
+            System.out.println("Type the file name here: ");
+            inputFileName = input.nextLine();
+
+            System.out.println("Inputted file: " + inputFileName);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName))){
 
