@@ -9,11 +9,11 @@ public class Main
     //private static String inputFileName;
     public static void main(String[] args) 
     {
+    
         if(args.length != 1) {
             System.err.println("Usage need to enter input filename");
             System.exit(1);
         }
-        
         /*
         try
         {
@@ -29,7 +29,7 @@ public class Main
         }
         */
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(args[0]))/*(new FileReader(inputFileName))*/){
+        try (BufferedReader reader = new BufferedReader(new FileReader(args[0]))/*(new FileReader(inputFileName)))*/){
 
             // create a Tokenizer object from our buffered reader
             Tokenizer tokenizer = new Tokenizer(reader);
