@@ -7,11 +7,6 @@ enum LexemeType {
 
 public class Tokenizer {
 
-    /*
-    RelationalOperator  =  "<" | "=<" | "=" | "!=" | ">=" | ">" .
-
-    */
-
     private BufferedReader reader;
     private int lineNumber, linePosition;
     private String line;
@@ -186,7 +181,8 @@ public class Tokenizer {
 
         return '\n';
     }
-
+    
+    /*
     private boolean isValidIdentifierPartial(String token) throws IOException {
         // make sure there are more characters in the line
         if(line == null) {
@@ -204,6 +200,7 @@ public class Tokenizer {
 
         return true;
     }
+    */
 
     private boolean isWhiteSpace() {
         return Character.isWhitespace(peekNextChar());

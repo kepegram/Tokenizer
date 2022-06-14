@@ -1,0 +1,5 @@
+This file includes a number of symbols that are not allowed by the grammar. 
+Your lexical analyzer should stop once it reads "!" and report the error along with the position of "!". 
+Assumme "!" is removed from the input. 
+Then your program should stop once it reads "@". 
+Assume further that "@" is also removed, then your program must stop once it reads "^", ...

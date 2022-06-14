@@ -1,0 +1,19 @@
+1:1:'ID' Something
+3:1:'NUM' 18 
+3:3:'/' 
+3:4:'NUM' 10 
+3:6:'/' 
+3:7:'ID' year2019
+5:1:'(' 
+5:3:'ID' expression
+5:13:')' 
+5:15:'=' 
+5:16:'NUM' 1345
+5:20:'ID' integer
+5:28:'ID' followed
+5:37:'ID' by
+5:40:'NUM' 25 
+5:42:'or' 
+5:45:'NUM' 50 
+7:1:'IDENTIFIER' a_123
+7:6:>>>>> Illegal character '@'
