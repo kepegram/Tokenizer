@@ -99,7 +99,7 @@ public class Tokenizer {
                     if(isKeyWord(builder.toString())) {
                         this.kind = builder.toString();
                     } else {
-                        this.kind = "ID";
+                        this.kind = "IDENTIFIER";
                         this.value = builder.toString();
                     }
                 } else if(isSeparator()){
@@ -237,7 +237,7 @@ public class Tokenizer {
         return isOperator(peekNextChar());
     }
 
-    String[] keyWords = {"if", "fi", "true"};
+    String[] keyWords = {"if", "fi", "true", "else", "bool", "int", "program", "end"};
 
     private boolean isKeyWord(String s) {
         for(String kw: keyWords) {

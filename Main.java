@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class Main 
 {
+    //private static String inputFileName;
     public static void main(String[] args) 
     {
         if(args.length != 1) {
@@ -28,7 +29,7 @@ public class Main
         }
         */
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(args[0]))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(args[0]))/*(new FileReader(inputFileName))*/){
 
             // create a Tokenizer object from our buffered reader
             Tokenizer tokenizer = new Tokenizer(reader);
