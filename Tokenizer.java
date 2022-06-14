@@ -45,19 +45,21 @@ public class Tokenizer {
     }
     
     public void next() throws IOException {
+
+        this.currentToken = null;
+        this.kind = Tokenizer.ERROR;
+        this.value = null;
+
         if(isError) {
             return;
         }
 
+        this.startPosition = null;
+        this.kind = Tokenizer.EOF;
+
         if(isEOF) {
-            this.kind = Tokenizer.EOF;
             return;
         }
-
-        this.startPosition = null;
-        this.currentToken = null;
-        this.kind = null;
-        this.value = null;
 
         // scan ahead for whitespace and/or comments
         while(!isEOF && (isWhiteSpace() || peekNextChar() == '\n')) {
