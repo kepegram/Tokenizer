@@ -2,5 +2,5 @@
 *.class
 out.txt
 examples/
-project 1.pdf
-project 2.pdf
+*.pdf
+.DS_Store
