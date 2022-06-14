@@ -1,24 +1,17 @@
 import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.IOException;
-
-class Position {
-    public final int lineNumber;
-    public final int linePosition;
-
-    public Position(int lineNumber, int linePosition) {
-        this.lineNumber = lineNumber;
-        this.linePosition = linePosition;
-    }
-}
 
 enum LexemeType {
     ID, NUM
 }
 
 public class Tokenizer {
-    public static final String EOF = "is-end-of-file";
-    public static final String ERROR = "is-invalid-character";
+
+    /*
+    RelationalOperator  =  "<" | "=<" | "=" | "!=" | ">=" | ">" .
+
+    */
+
     private BufferedReader reader;
     private int lineNumber, linePosition;
     private String line;
@@ -47,7 +40,7 @@ public class Tokenizer {
     public void next() throws IOException {
 
         this.currentToken = null;
-        this.kind = Tokenizer.ERROR;
+        this.kind = Grammer.ERROR;
         this.value = null;
 
         if(isError) {
@@ -55,7 +48,7 @@ public class Tokenizer {
         }
 
         this.startPosition = null;
-        this.kind = Tokenizer.EOF;
+        this.kind = Grammer.EOF;
 
         if(isEOF) {
             return;
@@ -74,14 +67,19 @@ public class Tokenizer {
                 next();
             } else {
                 StringBuilder builder = new StringBuilder();
-                startPosition = new Position(lineNumber + 1, linePosition + 1);
-                if(isOperator()) {
+                startPosition = new Position(lineNumber + 1, linePosition + 1, peekNextChar());
+                if(isOperatorChar()) {
                     // is operator-like
                     do {
                         builder.append(peekNextChar());
-                    } while (nextChar() && isOperator());
+                    } while (nextChar() && isOperatorChar());
 
-                    this.kind = builder.toString();
+                    String token = builder.toString();
+                    if(isValidOperator(token)) {
+                        this.kind = builder.toString();
+                    } else {
+                        this.isError = true;
+                    }
                 } else if(isDigit()) {
                     // is operator-like
                     do {
@@ -99,7 +97,7 @@ public class Tokenizer {
                     if(isKeyWord(builder.toString())) {
                         this.kind = builder.toString();
                     } else {
-                        this.kind = "IDENTIFIER";
+                        this.kind = Grammer.IDENTIFIER_KIND;
                         this.value = builder.toString();
                     }
                 } else if(isSeparator()){
@@ -120,8 +118,8 @@ public class Tokenizer {
 
     public String kind() {
         if(this.currentToken == null) {
-            if(this.isEOF) return Tokenizer.EOF;
-            if(this.isError) return Tokenizer.ERROR;
+            if(this.isEOF) return Grammer.EOF;
+            if(this.isError) return Grammer.ERROR;
             throw new RuntimeException("Not ready");
         }
 
@@ -180,7 +178,7 @@ public class Tokenizer {
         return true;
     }
 
-    public char peekNextChar() {
+    private char peekNextChar() {
         // if no line available - or we are at the end of the line
         if(line != null && linePosition < line.length()) {
             return line.charAt(linePosition);
@@ -211,10 +209,8 @@ public class Tokenizer {
         return Character.isWhitespace(peekNextChar());
     }
 
-    public static char[] SEPARATORS = {';', '(', ')'};
-
     private boolean isSeparator(char ch) {
-        for(char sep: SEPARATORS) {
+        for(char sep: Grammer.SEPARATORS) {
             if(sep == ch) return true;
         }
         return false;
@@ -224,23 +220,29 @@ public class Tokenizer {
         return isSeparator(ch);
     }
 
-    char operatorChars[] = {':', '=', '<', '>', '!', '*', '+', '-', '/'};
+    private boolean isValidOperator(String testOp) {
+        for(String op: Grammer.operators) {
+            if(op.equals(testOp)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // function to test for one of the following operators (and test next char is valid)
-    private boolean isOperator(char ch) {
-        for(char op: operatorChars) {
+    private boolean isOperatorChar(char ch) {
+        for(char op: Grammer.operatorChars) {
             if(op == ch) return true;
         }
         return false;
     }
 
-    private boolean isOperator() {
-        return isOperator(peekNextChar());
+    private boolean isOperatorChar() {
+        return isOperatorChar(peekNextChar());
     }
 
-    String[] keyWords = {"if", "fi", "true", "else", "bool", "int", "program", "end"};
-
     private boolean isKeyWord(String s) {
-        for(String kw: keyWords) {
+        for(String kw: Grammer.keyWords) {
             if(kw.equals(s)) {
                 return true;
             }
