@@ -1,0 +1,8 @@
+This input when given to your lexical analyzer should produce 7 tokens: 
+Program (this is an identifier)
+lexically (this is an identifier)
+"-" (this is a special symbol)
+ok (this is an identifier)
+"-" (this is a special symbol)
+2 (this is a number)
+"end-of-text"
