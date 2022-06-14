@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
-
-import javax.management.RuntimeErrorException;
 
 class Position {
     public final int lineNumber;
@@ -19,13 +18,17 @@ enum LexemeType {
 
 public class Tokenizer {
     public static final String EOF = "is-end-of-file";
+    public static final String ERROR = "is-invalid-character";
     private BufferedReader reader;
     private int lineNumber, linePosition;
     private String line;
 
     private boolean isEOF;
+    private boolean isError;
     public String currentToken;
     private Position startPosition;
+    private String kind;
+    private Object value;
 
     public Tokenizer (BufferedReader reader) throws IOException{
         this.reader = reader;
@@ -35,45 +38,79 @@ public class Tokenizer {
         this.currentToken = null;
         this.startPosition = null;
         this.isEOF = false;
+        this.isError = false;
+        this.kind = null;
+        this.value = null;
         nextLine();
     }
     
     public void next() throws IOException {
+        if(isError) {
+            return;
+        }
+
+        if(isEOF) {
+            this.kind = Tokenizer.EOF;
+            return;
+        }
+
+        this.startPosition = null;
+        this.currentToken = null;
+        this.kind = null;
+        this.value = null;
+
         // scan ahead for whitespace and/or comments
-        while(!isEOF) {
-            if (!isWhiteSpace() && peekNextChar() != '\n') {
-                break;
-            }
+        while(!isEOF && (isWhiteSpace() || peekNextChar() == '\n')) {
             nextChar();
         }
         // deal with an EOF condition
-        if(isEOF) {
-            this.currentToken = null;
-            this.startPosition = null;
-            return;
-        } else {
+        if(!isEOF) {
             // deal with comments first, move ahead to next line
             if (isStartComment()) {
                 nextLine();
                 // call next again
                 next();
             } else {
-
+                StringBuilder builder = new StringBuilder();
+                startPosition = new Position(lineNumber + 1, linePosition + 1);
                 if(isOperator()) {
-
-                } if(isKeyWord()) {
-
-                }else {
-                    // is identifier
-                    StringBuilder builder = new StringBuilder();
-                    startPosition = new Position(lineNumber + 1, linePosition + 1);
+                    // is operator-like
                     do {
                         builder.append(peekNextChar());
-                    } while (isValidIdentifierPartial(builder.toString()));
+                    } while (nextChar() && isOperator());
 
-                    if(builder.length() > 0) {
-                        this.currentToken = builder.toString();
+                    this.kind = builder.toString();
+                } else if(isDigit()) {
+                    // is operator-like
+                    do {
+                        builder.append(peekNextChar());
+                    } while (nextChar() && isDigit());
+
+                    this.kind = "NUM";
+                    this.value = Integer.parseInt(builder.toString());
+                } else if(isIdentifier()){
+                    // is identifier-like
+                    do {
+                        builder.append(peekNextChar());
+                    } while (nextChar() && isIdentifier());
+
+                    if(isKeyWord(builder.toString())) {
+                        this.kind = builder.toString();
+                    } else {
+                        this.kind = "ID";
+                        this.value = builder.toString();
                     }
+                } else if(isSeparator()){
+                    builder.append(peekNextChar());
+                    this.kind = builder.toString();
+                    nextChar();
+                } else {
+                    // error case
+                    this.currentToken = null;
+                    isError = true;
+                }
+                if(builder.length() > 0 && !isError) {
+                    this.currentToken = builder.toString();
                 }
             }
         }
@@ -82,10 +119,11 @@ public class Tokenizer {
     public String kind() {
         if(this.currentToken == null) {
             if(this.isEOF) return Tokenizer.EOF;
+            if(this.isError) return Tokenizer.ERROR;
             throw new RuntimeException("Not ready");
         }
 
-        return "unknown";
+        return kind;
     }
 
     public Object value() {
@@ -93,15 +131,19 @@ public class Tokenizer {
             throw new RuntimeException("Not ready");
         }
 
-        return "unknown";
+        return value;
     }
 
     public Position position() {
-        if(this.currentToken == null) {
+        if(this.startPosition == null) {
             throw new RuntimeException("Not ready");
         }
 
         return this.startPosition;
+    }
+
+    public boolean isError() {
+        return isError;
     }
 
     private boolean isStartComment() {
@@ -136,7 +178,7 @@ public class Tokenizer {
         return true;
     }
 
-    private char peekNextChar() {
+    public char peekNextChar() {
         // if no line available - or we are at the end of the line
         if(line != null && linePosition < line.length()) {
             return line.charAt(linePosition);
@@ -167,7 +209,7 @@ public class Tokenizer {
         return Character.isWhitespace(peekNextChar());
     }
 
-    public static char[] SEPARATORS = {';', '(', ')', '/', '+', '-', '*'};
+    public static char[] SEPARATORS = {';', '(', ')'};
 
     private boolean isSeparator(char ch) {
         for(char sep: SEPARATORS) {
@@ -180,30 +222,43 @@ public class Tokenizer {
         return isSeparator(ch);
     }
 
-    char special[] = {':', '=', '<', '>', '!'};
+    char operatorChars[] = {':', '=', '<', '>', '!', '*', '+', '-', '/'};
     // function to test for one of the following operators (and test next char is valid)
-    private boolean isOperator() {
-        /* 
-            AssignmentOperator  =  ":="
-            RelationalOperator  =  "<" | "=<" | "=" | "!=" | ">=" | ">"
-            AdditiveOperator  =  "+" | "-" | "or"
-            MultiplicativeOperator  =  "*" | "/" | "and"
-            UnaryOperator  =  "-" | "not"
-            BooleanLiteral  =  "false"  |  "true"
-        */
-
+    private boolean isOperator(char ch) {
+        for(char op: operatorChars) {
+            if(op == ch) return true;
+        }
         return false;
     }
 
-    private boolean isKeyWord() {
+    private boolean isOperator() {
+        return isOperator(peekNextChar());
+    }
+
+    String[] keyWords = {"if", "fi", "true"};
+
+    private boolean isKeyWord(String s) {
+        for(String kw: keyWords) {
+            if(kw.equals(s)) {
+                return true;
+            }
+        }
         return false;
+    } 
+
+    private boolean isDigit(char ch) {
+        return ch >= '0' && ch <= '9';
     }
 
     private boolean isDigit() {
-        return false;
+        return isDigit(peekNextChar());
+    }
+
+    private boolean isIdentifier(char ch) {
+        return Character.isAlphabetic(ch) || Character.isDigit(ch) ||ch == '_';
     }
 
     private boolean isIdentifier() {
-        return false;
+        return isIdentifier(peekNextChar());
     }
 }
