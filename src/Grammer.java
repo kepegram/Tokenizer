@@ -8,7 +8,7 @@ public abstract class Grammer {
     public static final String DECLARATION_TERM_KIND = ";";
 
     public static char[] SEPARATORS = {';', '(', ')'};
-    public static char operatorChars[] = {':', '=', '<', '>', '!', '*', '+', '-', '/'};
-    public static String[] keyWords = {"if", "fi", "true", "else", "bool", "int", "program", "end", "do", "od"};
+    public static char[] operatorChars = {':', '=', '<', '>', '!', '*', '+', '-', '/'};
+    public static String[] keyWords = {"if", "fi", "true", "else", "bool", "int", "program", "end", "do", "od", "print", "or"};
     public static String[] operators = {":", ":=", "<", "=<", "=", "!=", ">=", ">", "+", "-", "*", "/"};
 }
