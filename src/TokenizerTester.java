@@ -32,7 +32,7 @@ public class TokenizerTester
         try (BufferedReader reader = new BufferedReader(new FileReader(args[0]))/*(new FileReader(inputFileName)))*/){
 
             // create a Tokenizer object from our buffered reader
-            Tokenizer tokenizer = new Tokenizer(reader);
+            Tokenizer tokenizer = new RewindableTokenizerIMPL(new TokenizerIMPL(reader));
 
             // start off the tokenizer (read first token)
             tokenizer.next();
