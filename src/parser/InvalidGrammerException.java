@@ -1,3 +1,4 @@
+package parser;
 
 public class InvalidGrammerException extends Exception {
     private final Position pos;

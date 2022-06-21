@@ -4,6 +4,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
+import parser.Grammer;
+import parser.RewindableTokenizerIMPL;
+import parser.Tokenizer;
+import parser.TokenizerIMPL;
+
 public class TokenizerTester 
 {
     //private static String inputFileName;

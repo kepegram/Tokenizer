@@ -1,3 +1,4 @@
+package parser;
 import java.io.IOException;
 
 public interface Tokenizer {

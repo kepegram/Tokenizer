@@ -1,5 +1,6 @@
+package parser;
 
-class Position {
+public class Position {
     public final int lineNumber;
     public final int linePosition;
     public final char charAt;
