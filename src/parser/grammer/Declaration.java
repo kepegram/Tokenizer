@@ -29,7 +29,7 @@ class Declaration extends GrammerElement {
         this.identifierName = toks.value().toString();
 
         // test for a declaration - C. (ends with ";")
-        if(!testNextKindEquals(Grammer.STATEMENT_BREAK_KIND, toks)) {
+        if(!testNextKindEquals(Grammer.DECLARATION_TERM_KIND, toks)) {
             toks.rewind();
             toks.rewind();
             toks.rewind();

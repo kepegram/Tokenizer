@@ -8,7 +8,7 @@ import parser.InvalidGrammerException;
 import parser.RewindableTokenizer;
 import parser.Tokenizer;
 
-abstract class GrammerElement {
+public abstract class GrammerElement {
     public abstract boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException;
 
     protected static boolean testNextKindEquals(String expected, Tokenizer toks)  throws InvalidGrammerException, IOException{
