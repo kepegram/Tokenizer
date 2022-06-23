@@ -51,6 +51,12 @@ abstract class Statement extends GrammerElement{
             } 
             
             this.statement = stmnt;
+
+            // remove any final semicolon
+            if(!testNextKindEquals(";", toks)) {
+                toks.rewind();
+            }
+
             return true;
         }
 
