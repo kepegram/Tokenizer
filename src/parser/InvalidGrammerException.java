@@ -7,6 +7,11 @@ public class InvalidGrammerException extends Exception {
         this.pos = pos;
     }
 
+    public InvalidGrammerException(String message) {
+        super(message);
+        this.pos = null;
+    }
+
     public InvalidGrammerException(String message, Position pos) {
         super(message);
         this.pos = pos;

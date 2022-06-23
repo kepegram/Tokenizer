@@ -54,7 +54,7 @@ public class Term extends GrammerElement {
                 return false;
             }
             cur = cur.getChild();
-            opStr = cur.getChildOp();
+            if(cur != null) opStr = cur.getChildOp();
         }
         return true;
     }

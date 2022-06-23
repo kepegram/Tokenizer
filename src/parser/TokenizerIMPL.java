@@ -82,7 +82,7 @@ public class TokenizerIMPL implements Tokenizer {
                         builder.append(peekNextChar());
                     } while (nextChar() && isDigit());
 
-                    this.kind = "NUM";
+                    this.kind = Grammer.INTEGER_LITERAL_KIND;
                     this.value = Integer.parseInt(builder.toString());
                 } else if(isIdentifier()){
                     // is identifier-like
@@ -90,7 +90,10 @@ public class TokenizerIMPL implements Tokenizer {
                         builder.append(peekNextChar());
                     } while (nextChar() && isIdentifier());
 
-                    if(isKeyWord(builder.toString())) {
+                    if(isBooleanLiteral(builder.toString())){
+                        this.kind = Grammer.BOOLEAN_LITERAL_KIND;
+                        this.value = Boolean.parseBoolean(builder.toString());
+                    } else if (Grammer.isKeyWord(builder.toString())) {
                         this.kind = builder.toString();
                     } else {
                         this.kind = Grammer.IDENTIFIER_KIND;
@@ -239,8 +242,8 @@ public class TokenizerIMPL implements Tokenizer {
         return isOperatorChar(peekNextChar());
     }
 
-    private boolean isKeyWord(String s) {
-        for(String kw: Grammer.keyWords) {
+    private boolean isBooleanLiteral(String s) {
+        for(String kw: Grammer.BOOLEAN_LITERAL_VALUES) {
             if(kw.equals(s)) {
                 return true;
             }
@@ -256,11 +259,7 @@ public class TokenizerIMPL implements Tokenizer {
         return isDigit(peekNextChar());
     }
 
-    private boolean isIdentifier(char ch) {
-        return Character.isAlphabetic(ch) || Character.isDigit(ch) ||ch == '_';
-    }
-
     private boolean isIdentifier() {
-        return isIdentifier(peekNextChar());
+        return Grammer.isValidIdentifierChar(peekNextChar());
     }
 }

@@ -2,19 +2,91 @@ package parser.grammer.expression.factors;
 
 import java.io.IOException;
 
+import parser.Grammer;
 import parser.InvalidGrammerException;
 import parser.RewindableTokenizer;
 import parser.grammer.GrammerElement;
+import parser.grammer.expression.Expression;
+import parser.grammer.expression.factors.Factor.FactorValue;
 
-final class BooleanLiteralFactorValue {
-    private final boolean value;
-    public BooleanLiteralFactorValue(boolean value) {this.value = value;}
-    public boolean isTrue() {return value;}
-    public boolean isFalse() {return !value;}
+final class BooleanLiteralFactor implements FactorValue{
+    public final static String TYPE = "BooleanLiteral";
+    private final Boolean value;
+    public BooleanLiteralFactor(Object value) {
+        if(value instanceof Boolean) {
+            this.value = (Boolean) value;
+        } else {
+            throw new RuntimeException("Need Boolean for Boolean Literal");
+        }
+    }
+    public Boolean getValue() {return value;}
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+    @Override
+    public boolean isValid() {
+        return value != null;
+    }
+}
+
+final class IntegerLiteralFactor implements FactorValue{
+    public final static String TYPE = "IntegerLiteral";
+    private final Integer value;
+    public IntegerLiteralFactor (Object value) {
+        if(value instanceof Integer) {
+            this.value = (Integer) value;
+        } else {
+            throw new RuntimeException("Need Integer for Boolean Literal");
+        }
+    }
+    public Integer getValue() {return value;}
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+    @Override
+    public boolean isValid() {
+        return value != null;
+    }
+}
+
+final class IdentifierFactor implements FactorValue{
+    public final static String TYPE = "Identifier";
+    private final String value;
+    public IdentifierFactor(String value) {this.value = value;}
+    public String getValue() {return value;}
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+    @Override
+    public boolean isValid() {
+        return value != null && Grammer.isValidIdentifier(value);
+    }
+}
+
+final class ExpressionFactor implements FactorValue{
+    public final static String TYPE = "ExpressionFactor";
+    private final Expression value;
+    public ExpressionFactor(Expression value) {this.value = value;}
+    public Expression getValue() {return value;}
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+    @Override
+    public boolean isValid() {
+        return value != null && value.isValid();
+    }
 }
 
 public class Factor extends GrammerElement {
-    public interface FactorValue {} 
+    public interface FactorValue {
+        String getType();
+        boolean isValid();
+        Object getValue();
+    } 
 
     private FactorValue factorValue;
     private String optionalUnaryOp;
@@ -23,15 +95,50 @@ public class Factor extends GrammerElement {
 
     @Override
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
-        // TODO Auto-generated method stub
-        return false;
+        // Determine the factor type
+        toks.next();
+        if(toks.kind() == Grammer.EOF) {
+            throw new InvalidGrammerException("Recieved EOF");
+        }
+
+        switch(toks.kind()) {
+            case Grammer.BOOLEAN_LITERAL_KIND:
+                this.factorValue = new BooleanLiteralFactor(toks.value());
+                break;
+            case Grammer.INTEGER_LITERAL_KIND:
+                this.factorValue = new IntegerLiteralFactor(toks.value());
+                break;
+            case Grammer.IDENTIFIER_KIND:
+                this.factorValue = new IdentifierFactor(toks.value().toString());
+                break;
+            case "(":
+                this.factorValue = new ExpressionFactor(new Expression());
+                if(!((ExpressionFactor) this.factorValue).getValue().read(toks)) {
+                    // error 
+                    throw new RuntimeException("unknown");
+                }
+                assertNextKindEquals(")", toks);
+                break;
+            default:
+        }
+
+        return true;
     }
 
-    public void addChild(Factor curFactor, String linkingMultiplicativeOperator) {
+    public void addChild(Factor factor, String op) {
+        this.child = factor;
+        this.childOp = op;
     }
 
     public boolean isValid() {
-        return false;
+        return (
+            (factorValue != null && factorValue.isValid()) 
+            && (child == null || child.isValid())
+        );
+    }
+
+    public FactorValue getFactorValue() {
+        return factorValue;
     }
 
     public String getOptionalUnaryOp() {

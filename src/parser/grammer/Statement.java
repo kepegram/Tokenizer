@@ -1,9 +1,12 @@
 package parser.grammer;
 
 import java.io.IOException;
+import java.util.List;
 
 import parser.Grammer;
 import parser.InvalidGrammerException;
+import parser.Main;
+import parser.Position;
 import parser.RewindableTokenizer;
 import parser.grammer.expression.Expression;
 
@@ -11,6 +14,7 @@ abstract class Statement extends GrammerElement{
     static class StatementBuilder extends GrammerElement {
 
         private Statement statement;
+        private Program program = Main.program;
 
         @Override
         public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
@@ -38,9 +42,11 @@ abstract class Statement extends GrammerElement{
                 case Grammer.PRINT_KIND:
                     stmnt = new PrintStatement();
                     break;
+                default:
+                    break;
             }
 
-            if(!stmnt.read(toks)) {
+            if(stmnt == null || !stmnt.read(toks)) {
                 throw new RuntimeException();
             } 
             
@@ -86,20 +92,106 @@ class AssignmentStatement extends Statement {
 }
 
 class ConditionalStatement extends Statement {
+    private final Expression predicateExpression;
+    private final Body body;
+    private Body elseBody;
+
+    public ConditionalStatement() {
+        this.predicateExpression = new Expression();
+        this.body = new Body();
+        this.elseBody = null;
+    }
+
+    private static final String[] XXX = {Grammer.ELSE_KIND, Grammer.FI_KIND};
 
     @Override
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
-        // TODO Auto-generated method stub
-        return false;
+
+        // starts with a valid if
+        assertNextKindEquals(Grammer.IF_KIND, toks);
+
+        Position startPredicatePos = toks.position();
+        if(!this.predicateExpression.read(toks)) {
+            throw new InvalidGrammerException("invalid expression", startPredicatePos);
+        }
+
+        // contains a then
+        assertNextKindEquals(Grammer.THEN_KIND, toks);
+
+        Position startBodyPos = toks.position();
+        if(!this.body.read(toks)) {
+            throw new InvalidGrammerException("invalid conditional body", startBodyPos);
+        }
+
+        assertNextKindIn(XXX, toks);
+
+        if(toks.kind() == Grammer.ELSE_KIND) {
+            this.elseBody = new Body();
+            Position startElseBodyPos = toks.position();
+            if(!this.elseBody.read(toks)) {
+                throw new InvalidGrammerException("invalid conditional else body", startElseBodyPos);
+            }
+        } else {
+            toks.rewind();
+        }
+
+        assertNextKindEquals(Grammer.FI_KIND, toks);
+
+        return true;
+    }
+
+    public Expression getPredicateExpression() {
+        return predicateExpression;
+    }
+
+    public Body getBody() {
+        return body;
+    }
+
+    public Body getElseBody() {
+        return elseBody;
     }
 }
 
 class IterativeStatement extends Statement {
+    private final Expression predicateExpression;
+    private final Body body;
+
+    public IterativeStatement() {
+        this.predicateExpression = new Expression();
+        this.body = new Body();
+    }
 
     @Override
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
-        // TODO Auto-generated method stub
-        return false;
+
+        // starts with a valid while
+        assertNextKindEquals(Grammer.WHILE_KIND, toks);
+
+        Position startPredicatePos = toks.position();
+        if(!this.predicateExpression.read(toks)) {
+            throw new InvalidGrammerException("invalid expression", startPredicatePos);
+        }
+
+        // contains a then
+        assertNextKindEquals(Grammer.DO_KIND, toks);
+
+        Position startBodyPos = toks.position();
+        if(!this.body.read(toks)) {
+            throw new InvalidGrammerException("invalid conditional body", startBodyPos);
+        }
+
+        assertNextKindEquals(Grammer.END_KIND, toks);
+
+        return true;
+    }
+
+    public Expression getPredicateExpression() {
+        return predicateExpression;
+    }
+
+    public Body getBody() {
+        return body;
     }
 }
 
