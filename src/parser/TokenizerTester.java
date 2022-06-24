@@ -24,7 +24,7 @@ public class TokenizerTester
     public static void main(String[] args) 
     {
         // The file to parse
-        String fileName = getFileName(args[0]);
+        String fileName = getFileName((args.length > 0)?args[0]:null);
 
         // Create a Buffered reader to parse the file
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))){

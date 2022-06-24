@@ -25,7 +25,7 @@ public class Main {
     public static void main(String[] args) 
     {
         // The file to parse
-        String fileName = getFileName(args[0]);
+        String fileName = getFileName((args.length > 0)?args[0]:null);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))){
 

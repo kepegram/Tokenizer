@@ -182,7 +182,7 @@ class IterativeStatement extends Statement {
             throw new InvalidGrammerException("invalid expression", startPredicatePos);
         }
 
-        // contains a then
+        // contains a do
         assertNextKindEquals(Grammer.DO_KIND, toks);
 
         Position startBodyPos = toks.position();
@@ -190,7 +190,7 @@ class IterativeStatement extends Statement {
             throw new InvalidGrammerException("invalid conditional body", startBodyPos);
         }
 
-        assertNextKindEquals(Grammer.END_KIND, toks);
+        assertNextKindEquals(Grammer.OD_KIND, toks);
 
         return true;
     }
