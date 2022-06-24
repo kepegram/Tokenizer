@@ -3,11 +3,11 @@ package parser.grammer.expression;
 import java.io.IOException;
 import java.util.Arrays;
 
-import parser.Grammer;
-import parser.InvalidGrammerException;
-import parser.RewindableTokenizer;
+import parser.grammer.Grammer;
 import parser.grammer.GrammerElement;
+import parser.grammer.InvalidGrammerException;
 import parser.grammer.expression.factors.Factor;
+import parser.tokenizer.RewindableTokenizer;
 
 public class Term extends GrammerElement {
     private final Factor rootFactor;
@@ -36,6 +36,7 @@ public class Term extends GrammerElement {
                 break;
             }
             linkingMultiplicativeOperator = toks.kind();
+            parent = curFactor;
             curFactor = new Factor();
         }
         return isValid();

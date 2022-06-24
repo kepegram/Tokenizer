@@ -1,20 +1,15 @@
 package parser.grammer;
 
 import java.io.IOException;
-import java.util.List;
 
-import parser.Grammer;
-import parser.InvalidGrammerException;
-import parser.Main;
-import parser.Position;
-import parser.RewindableTokenizer;
 import parser.grammer.expression.Expression;
+import parser.tokenizer.Position;
+import parser.tokenizer.RewindableTokenizer;
 
 abstract class Statement extends GrammerElement{
     static class StatementBuilder extends GrammerElement {
 
         private Statement statement;
-        private Program program = Main.program;
 
         @Override
         public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
@@ -131,7 +126,7 @@ class ConditionalStatement extends Statement {
 
         assertNextKindIn(XXX, toks);
 
-        if(toks.kind() == Grammer.ELSE_KIND) {
+        if(Grammer.ELSE_KIND.equals(toks.kind())) {
             this.elseBody = new Body();
             Position startElseBodyPos = toks.position();
             if(!this.elseBody.read(toks)) {
@@ -205,6 +200,9 @@ class PrintStatement extends Statement {
     private Expression expression;
     @Override
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
+        // starts with a valid print
+        assertNextKindEquals(Grammer.PRINT_KIND, toks);
+
         // a valid Expression must follow
         this.expression = new Expression();
         this.expression.read(toks);

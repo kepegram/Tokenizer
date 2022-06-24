@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import parser.InvalidGrammerException;
-import parser.RewindableTokenizer;
-import parser.grammer.Statement.StatementBuilder;
+import parser.tokenizer.RewindableTokenizer;
 
 class Body extends GrammerElement {
     private final List<Declaration> declarations;

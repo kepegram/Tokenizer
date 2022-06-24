@@ -1,11 +1,7 @@
 package parser.grammer;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import parser.Grammer;
-import parser.InvalidGrammerException;
-import parser.RewindableTokenizer;
+import parser.tokenizer.RewindableTokenizer;
 
 public class Program extends GrammerElement {
     private String programName = null;

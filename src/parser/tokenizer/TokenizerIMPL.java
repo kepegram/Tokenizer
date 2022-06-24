@@ -1,6 +1,8 @@
-package parser;
+package parser.tokenizer;
 import java.io.BufferedReader;
 import java.io.IOException;
+
+import parser.grammer.Grammer;
 
 enum LexemeType {
     ID, NUM
@@ -111,6 +113,12 @@ public class TokenizerIMPL implements Tokenizer {
                 if(builder.length() > 0 && !isError) {
                     this.currentToken = builder.toString();
                 }
+
+                System.out.println(String.format(
+                    "(%s, %s, %d, %d)",
+                    kind(), value(),
+                    position().lineNumber, position().linePosition
+                ));
             }
         }
     }
@@ -222,7 +230,7 @@ public class TokenizerIMPL implements Tokenizer {
     }
 
     private boolean isValidOperator(String testOp) {
-        for(String op: Grammer.operators) {
+        for(String op: Grammer.OPERATORS) {
             if(op.equals(testOp)) {
                 return true;
             }
@@ -232,7 +240,7 @@ public class TokenizerIMPL implements Tokenizer {
 
     // function to test for one of the following operators (and test next char is valid)
     private boolean isOperatorChar(char ch) {
-        for(char op: Grammer.operatorChars) {
+        for(char op: Grammer.OPERATOR_CHARS) {
             if(op == ch) return true;
         }
         return false;

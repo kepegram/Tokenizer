@@ -3,10 +3,10 @@ package parser.grammer.expression;
 import java.io.IOException;
 import java.util.Arrays;
 
-import parser.Grammer;
-import parser.InvalidGrammerException;
-import parser.RewindableTokenizer;
+import parser.grammer.Grammer;
 import parser.grammer.GrammerElement;
+import parser.grammer.InvalidGrammerException;
+import parser.tokenizer.RewindableTokenizer;
 
 public class Expression extends GrammerElement {
     private final SimpleExpression rootSimpleExpression;
@@ -33,6 +33,7 @@ public class Expression extends GrammerElement {
                 break;
             }
             linkingRelationalOperator = toks.kind();
+            parent = simp;
             simp = new SimpleExpression();
         }
         return isValid();

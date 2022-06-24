@@ -1,4 +1,4 @@
-package parser;
+package parser.grammer;
 public abstract class Grammer {
     public static final String EOF = "is-end-of-file";
     public static final String ERROR = "is-invalid-character";
@@ -17,7 +17,8 @@ public abstract class Grammer {
     public static final String END_KIND = "end";
 
     public static final String[] STATEMENT_TERMINATORS_KINDS = {
-        Grammer.END_KIND, 
+        Grammer.END_KIND,
+        Grammer.ELSE_KIND,
         Grammer.FI_KIND,
         Grammer.OD_KIND
     };
@@ -33,14 +34,22 @@ public abstract class Grammer {
     public static final String[] BOOLEAN_LITERAL_VALUES = {"true", "false"};
 
     public static char[] SEPARATORS = {';', '(', ')'};
-    public static char[] operatorChars = {':', '=', '<', '>', '!', '*', '+', '-', '/'};
-    public static String[] keyWords = {"if", "fi", "true", "else", "bool", "int", "program", "end", "do", "od", "print", "or"};
-    public static String[] operators = {":", ":=", "<", "=<", "=", "!=", ">=", ">", "+", "-", "*", "/"};
+    public static char[] OPERATOR_CHARS = {':', '=', '<', '>', '!', '*', '+', '-', '/'};
+    public static String[] KEYWORDS = { 
+        "program", "end",
+        "bool", "int", 
+        "if", "then", "else", "fi",
+        "while", "do", "od",
+        "print",
+        "or", "and", "not",
+        "false", "true"
+    };
+    public static String[] OPERATORS = {":", ":=", "<", "=<", "=", "!=", ">=", ">", "+", "-", "*", "/"};
 
     
 
     public static boolean isKeyWord(String s) {
-        for(String kw: Grammer.keyWords) {
+        for(String kw: Grammer.KEYWORDS) {
             if(kw.equals(s)) {
                 return true;
             }

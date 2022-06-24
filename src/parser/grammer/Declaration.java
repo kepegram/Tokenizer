@@ -2,9 +2,7 @@ package parser.grammer;
 
 import java.io.IOException;
 
-import parser.Grammer;
-import parser.InvalidGrammerException;
-import parser.RewindableTokenizer;
+import parser.tokenizer.RewindableTokenizer;
 
 class Declaration extends GrammerElement {
     private String type = null;

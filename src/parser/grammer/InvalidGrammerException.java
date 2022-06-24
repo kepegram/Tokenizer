@@ -1,4 +1,6 @@
-package parser;
+package parser.grammer;
+
+import parser.tokenizer.Position;
 
 public class InvalidGrammerException extends Exception {
     private final Position pos;
@@ -39,6 +41,9 @@ public class InvalidGrammerException extends Exception {
 
     @Override
     public String toString() {
-        return String.format("InvalidGrammerException: {\n\tmsg: '%s',\n\tpos: '%s'\n}", this.getMessage(), this.pos.toString());
+        return String.format(
+            "InvalidGrammerException: {\n\tmsg: '%s',\n\tpos: '%s'\n}", 
+            this.getMessage(), 
+            (this.pos != null)?this.pos.toString():"unknown position");
     }
 }

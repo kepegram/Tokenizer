@@ -1,4 +1,4 @@
-package parser;
+package parser.tokenizer;
 
 public class Position {
     public final int lineNumber;

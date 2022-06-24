@@ -2,12 +2,12 @@ package parser.grammer.expression.factors;
 
 import java.io.IOException;
 
-import parser.Grammer;
-import parser.InvalidGrammerException;
-import parser.RewindableTokenizer;
+import parser.grammer.Grammer;
 import parser.grammer.GrammerElement;
+import parser.grammer.InvalidGrammerException;
 import parser.grammer.expression.Expression;
 import parser.grammer.expression.factors.Factor.FactorValue;
+import parser.tokenizer.RewindableTokenizer;
 
 final class BooleanLiteralFactor implements FactorValue{
     public final static String TYPE = "BooleanLiteral";
@@ -66,11 +66,15 @@ final class IdentifierFactor implements FactorValue{
     }
 }
 
-final class ExpressionFactor implements FactorValue{
+final class ExpressionFactor extends GrammerElement implements FactorValue{
     public final static String TYPE = "ExpressionFactor";
     private final Expression value;
     public ExpressionFactor(Expression value) {this.value = value;}
     public Expression getValue() {return value;}
+    @Override
+    public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
+        return value.read(toks);
+    }
     @Override
     public String getType() {
         return TYPE;
@@ -96,9 +100,10 @@ public class Factor extends GrammerElement {
     @Override
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
         // Determine the factor type
-        toks.next();
-        if(toks.kind() == Grammer.EOF) {
-            throw new InvalidGrammerException("Recieved EOF");
+
+        if(testNextKindIn(Grammer.UNARY_OPERATORS, toks)) {
+            this.optionalUnaryOp = toks.kind();
+            toks.next();
         }
 
         switch(toks.kind()) {
@@ -113,13 +118,16 @@ public class Factor extends GrammerElement {
                 break;
             case "(":
                 this.factorValue = new ExpressionFactor(new Expression());
-                if(!((ExpressionFactor) this.factorValue).getValue().read(toks)) {
+                if(!((ExpressionFactor) this.factorValue).read(toks)) {
                     // error 
                     throw new RuntimeException("unknown");
                 }
                 assertNextKindEquals(")", toks);
                 break;
+            case Grammer.EOF:
+                throw new InvalidGrammerException("Recieved EOF");
             default:
+            throw new InvalidGrammerException("Unknown");
         }
 
         return true;

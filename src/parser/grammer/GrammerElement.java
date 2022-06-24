@@ -3,10 +3,8 @@ package parser.grammer;
 import java.io.IOException;
 import java.util.Arrays;
 
-import parser.Grammer;
-import parser.InvalidGrammerException;
-import parser.RewindableTokenizer;
-import parser.Tokenizer;
+import parser.tokenizer.RewindableTokenizer;
+import parser.tokenizer.Tokenizer;
 
 public abstract class GrammerElement {
     public abstract boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException;

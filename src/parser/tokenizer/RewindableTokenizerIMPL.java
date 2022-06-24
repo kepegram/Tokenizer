@@ -1,7 +1,9 @@
-package parser;
+package parser.tokenizer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import parser.grammer.Grammer;
 
 class LexemeInfo {
     String kind;
