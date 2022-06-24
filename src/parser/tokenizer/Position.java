@@ -19,6 +19,9 @@ public class Position {
 
     @Override
     public String toString() {
-        return "Position [charAt=" + charAt + ", lineNumber=" + lineNumber + ", linePosition=" + linePosition + "]";
+        //return "Position [charAt=" + charAt + ", lineNumber=" + lineNumber + ", linePosition=" + linePosition + "]";
+        
+        return "Position [lineNumber=" + lineNumber + ", linePosition=" + linePosition + "]";
+
     }
 }

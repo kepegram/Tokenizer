@@ -1,0 +1,18 @@
+// (base) 45 ~/nml/translator> ./front_end.py ../examples/euclid-error.txt
+//../examples/euclid-error.txt:7:14:>>>>> Bad symbol '=': expected one of 'INTEGER', 
+//'false', 'true', 'IDENTIFIER', '(', '-' and 'not'
+//  while a !== b do
+//            ^
+
+program GCD:
+   int a;  int b;
+   a := 15;
+   b := 20;
+   print a;  print b;
+   while a !== b do
+      if a < b then b := b - a
+      else a := a - b
+      fi
+   od;
+   print a
+end

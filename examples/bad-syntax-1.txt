@@ -1,0 +1,11 @@
+// 320 ~/nml/translator> ./front_end.py ../examples/bad-syntax-1.txt 
+// ../examples/bad-syntax-1.txt:5:4:>>>>> Bad symbol 'IDENTIFIER': expected ;
+//   a := 2
+//    ^
+
+program bad_syntax_1:
+   int a;
+   int b;
+   bool c
+   a := 2
+end
