@@ -114,11 +114,11 @@ public class TokenizerIMPL implements Tokenizer {
                     this.currentToken = builder.toString();
                 }
 
-                System.out.println(String.format(
-                    "(%s, %s, %d, %d)",
-                    kind(), value(),
-                    position().lineNumber, position().linePosition
-                ));
+                // System.out.println(String.format(
+                //     "(%s, %s, %d, %d)",
+                //     kind(), value(),
+                //     position().lineNumber, position().linePosition
+                // ));
             }
         }
     }
@@ -153,6 +153,11 @@ public class TokenizerIMPL implements Tokenizer {
         return isError;
     }
 
+    public String tokenToString() {
+        return String.format("%d:%d:'%s' %s",
+        position().lineNumber, position().linePosition,
+        kind(), (value() != null)?value():"");
+    }
     private boolean isStartComment() {
         // if no line available - or we are at the end of the line
         if(line != null && linePosition < line.length() -1) {
@@ -193,26 +198,6 @@ public class TokenizerIMPL implements Tokenizer {
 
         return '\n';
     }
-    
-    /*
-    private boolean isValidIdentifierPartial(String token) throws IOException {
-        // make sure there are more characters in the line
-        if(line == null) {
-            throw new RuntimeException("Not ready");
-        }
-        if(isEOF || isWhiteSpace() || !nextChar()) return false;
-
-        char nextChar = peekNextChar();
-
-        // rules for parsing, from the grammer
-        if(isSeparator()) return false;
-
-        // first complete symbols
-        if(isSeparator(token.charAt(0))) return false;
-
-        return true;
-    }
-    */
 
     private boolean isWhiteSpace() {
         return Character.isWhitespace(peekNextChar());

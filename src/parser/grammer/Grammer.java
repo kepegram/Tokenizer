@@ -6,6 +6,7 @@ public abstract class Grammer {
     public static final String IDENTIFIER_KIND = "IDENTIFIER";
     public static final String DECLARATION_TERM_KIND = ";";
     public static final String ASSIGNMENT_OPERATOR_KIND = ":=";
+    public static final String PROGRAM_KIND = "program";
     public static final String PRINT_KIND = "print";
     public static final String IF_KIND = "if";
     public static final String THEN_KIND = "then";
@@ -36,7 +37,7 @@ public abstract class Grammer {
     public static char[] SEPARATORS = {';', '(', ')'};
     public static char[] OPERATOR_CHARS = {':', '=', '<', '>', '!', '*', '+', '-', '/'};
     public static String[] KEYWORDS = { 
-        "program", "end",
+        PROGRAM_KIND, "end",
         "bool", "int", 
         "if", "then", "else", "fi",
         "while", "do", "od",

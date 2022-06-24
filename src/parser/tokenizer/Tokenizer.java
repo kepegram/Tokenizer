@@ -5,7 +5,8 @@ public interface Tokenizer {
     
     void next() throws IOException;
     String kind();
-    public Object value();
-    public Position position();
-    public boolean isError();
+    Object value();
+    Position position();
+    boolean isError();
+    String tokenToString();
 }

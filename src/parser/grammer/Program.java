@@ -12,7 +12,7 @@ public class Program extends GrammerElement {
         // step 1 read preamble
         {
             // starts with body
-            assertNextKindEquals("program", toks);
+            assertNextKindEquals(Grammer.PROGRAM_KIND, toks);
 
             // valid identifier
             assertNextKindEquals(Grammer.IDENTIFIER_KIND, toks);
@@ -27,10 +27,10 @@ public class Program extends GrammerElement {
         body.read(toks);
 
         // step 3 read end
-        //assertNextKindEquals(Grammer.END_KEYWORD, toks);
+        assertNextKindEquals(Grammer.END_KIND, toks);
 
         // step 4 verify at end
-        //assertNextEOF(toks);
+        assertNextEOF(toks);
 
         return true;
     }

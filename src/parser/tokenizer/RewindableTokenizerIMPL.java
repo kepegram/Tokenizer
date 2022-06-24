@@ -42,7 +42,7 @@ public class RewindableTokenizerIMPL implements RewindableTokenizer {
 
     @Override
     public boolean isError() {
-        return this.errorFlag;
+        return this.errorFlag || this.srcTokenizer.isError();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class RewindableTokenizerIMPL implements RewindableTokenizer {
             } else {
                 if(this.lexemeList.size() == 0 || this.srcTokenizer.kind() != Grammer.EOF) {
                     this.srcTokenizer.next();
-                    if(this.srcTokenizer.kind() != Grammer.EOF) {
+                    if(this.srcTokenizer.kind() != Grammer.EOF && !this.srcTokenizer.isError()) {
                         this.lexemeList.add(new LexemeInfo(
                             this.srcTokenizer.kind(), this.srcTokenizer.value(), this.srcTokenizer.position()));
                     } else {
@@ -73,6 +73,9 @@ public class RewindableTokenizerIMPL implements RewindableTokenizer {
 
     @Override
     public Position position() {
+        if(this.isError()) {
+            return this.srcTokenizer.position();
+        }
         return this.lexemeList.get(this.currentLexeme).pos;
     }
 
@@ -84,5 +87,10 @@ public class RewindableTokenizerIMPL implements RewindableTokenizer {
     @Override
     public String kind() {
         return this.lexemeList.get(this.currentLexeme).kind;
+    }
+
+    @Override
+    public String tokenToString() {
+        return this.srcTokenizer.tokenToString();
     }
 }
