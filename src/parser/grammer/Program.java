@@ -1,6 +1,5 @@
 package parser.grammer;
 import java.io.IOException;
-
 import parser.tokenizer.RewindableTokenizer;
 
 public class Program extends GrammerElement {

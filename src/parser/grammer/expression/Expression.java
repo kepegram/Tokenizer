@@ -1,8 +1,6 @@
 package parser.grammer.expression;
-
 import java.io.IOException;
 import java.util.Arrays;
-
 import parser.grammer.Grammer;
 import parser.grammer.GrammerElement;
 import parser.grammer.InvalidGrammerException;

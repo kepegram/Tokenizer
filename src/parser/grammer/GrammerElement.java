@@ -1,8 +1,6 @@
 package parser.grammer;
-
 import java.io.IOException;
 import java.util.Arrays;
-
 import parser.tokenizer.RewindableTokenizer;
 import parser.tokenizer.Tokenizer;
 

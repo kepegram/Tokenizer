@@ -1,7 +1,5 @@
 package parser.grammer.expression.factors;
-
 import java.io.IOException;
-
 import parser.grammer.Grammer;
 import parser.grammer.GrammerElement;
 import parser.grammer.InvalidGrammerException;

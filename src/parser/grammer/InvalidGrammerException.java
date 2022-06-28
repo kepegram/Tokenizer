@@ -1,5 +1,4 @@
 package parser.grammer;
-
 import parser.tokenizer.Position;
 
 public class InvalidGrammerException extends Exception {

@@ -1,7 +1,5 @@
 package parser.grammer;
-
 import java.io.IOException;
-
 import parser.grammer.expression.Expression;
 import parser.tokenizer.Position;
 import parser.tokenizer.RewindableTokenizer;
@@ -109,7 +107,7 @@ class ConditionalStatement extends Statement {
         this.elseBody = null;
     }
 
-    private static final String[] XXX = {Grammer.ELSE_KIND, Grammer.FI_KIND};
+    private static final String[] GrammerString = {Grammer.ELSE_KIND, Grammer.FI_KIND};
 
     @Override
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
@@ -132,7 +130,7 @@ class ConditionalStatement extends Statement {
             throw new InvalidGrammerException("invalid conditional body", startBodyPos);
         }
 
-        assertNextKindIn(XXX, toks);
+        assertNextKindIn(GrammerString, toks);
 
         if(Grammer.ELSE_KIND.equals(toks.kind())) {
             this.elseBody = new Body();

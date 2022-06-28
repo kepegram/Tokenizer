@@ -30,7 +30,7 @@ public abstract class Grammer {
     public static final String[] UNARY_OPERATORS = {"-", "not"};
 
     public static final String[] DECLARATION_TYPES = {"int", "bool"};
-    public static final String INTEGER_LITERAL_KIND = "INTEGER_LITERAL";
+    public static final String INTEGER_LITERAL_KIND = "NUM";
     public static final String BOOLEAN_LITERAL_KIND = "BOOLEAN_LITERAL";
     public static final String[] BOOLEAN_LITERAL_VALUES = {"true", "false"};
 
