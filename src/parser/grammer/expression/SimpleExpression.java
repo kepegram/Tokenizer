@@ -41,7 +41,8 @@ class SimpleExpression extends GrammerElement {
         }
         return isValid();
     }
-
+    
+    // creates a child if the expression has a linking relational operator
     public void addChild(SimpleExpression child, String childOp) {
         // assert that this is a relational operator
         if(!Arrays.asList(Grammer.RELATIONAL_OPERATORS).contains(childOp)) {

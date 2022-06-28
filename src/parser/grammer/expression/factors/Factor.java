@@ -7,6 +7,7 @@ import parser.grammer.expression.Expression;
 import parser.grammer.expression.factors.Factor.FactorValue;
 import parser.tokenizer.RewindableTokenizer;
 
+// verifies if there's a boolean within this factor
 final class BooleanLiteralFactor implements FactorValue{
     public final static String TYPE = "BooleanLiteral";
     private final Boolean value;
@@ -28,6 +29,7 @@ final class BooleanLiteralFactor implements FactorValue{
     }
 }
 
+// verifies if there is an integer within this factor
 final class IntegerLiteralFactor implements FactorValue{
     public final static String TYPE = "IntegerLiteral";
     private final Integer value;
@@ -49,6 +51,7 @@ final class IntegerLiteralFactor implements FactorValue{
     }
 }
 
+// verifies if there is a identifier within this factor
 final class IdentifierFactor implements FactorValue{
     public final static String TYPE = "Identifier";
     private final String value;
@@ -63,7 +66,7 @@ final class IdentifierFactor implements FactorValue{
         return value != null && Grammer.isValidIdentifier(value);
     }
 }
-
+// verifies if there is an expression within this factor
 final class ExpressionFactor extends GrammerElement implements FactorValue{
     public final static String TYPE = "ExpressionFactor";
     private final Expression value;
@@ -97,13 +100,13 @@ public class Factor extends GrammerElement {
 
     @Override
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
-        // Determine the factor type
-
+        // take care of any optional Unary operator in front of it
         if(testNextKindIn(Grammer.UNARY_OPERATORS, toks)) {
             this.optionalUnaryOp = toks.kind();
             toks.next();
         }
 
+        // Determine the factor type
         switch(toks.kind()) {
             case Grammer.BOOLEAN_LITERAL_KIND:
                 this.factorValue = new BooleanLiteralFactor(toks.value());
@@ -123,9 +126,9 @@ public class Factor extends GrammerElement {
                 assertNextKindEquals(")", toks);
                 break;
             case Grammer.EOF:
-                throw new InvalidGrammerException("Recieved EOF");
+                throw new InvalidGrammerException("Recieved EOF", toks.position());
             default:
-            throw new InvalidGrammerException("Unknown");
+            throw new InvalidGrammerException("Unknown", toks.position());
         }
 
         return true;

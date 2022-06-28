@@ -4,8 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+
 import parser.grammer.InvalidGrammerException;
+import parser.grammer.InvalidTokenizerException;
 import parser.grammer.Program;
+import parser.tokenizer.Position;
 import parser.tokenizer.RewindableTokenizer;
 import parser.tokenizer.RewindableTokenizerIMPL;
 import parser.tokenizer.TokenizerIMPL;
@@ -37,7 +40,16 @@ public class Main {
 
                 // try to parse and output the result to the console
                 System.out.println(program.read(toks));
-            } catch (InvalidGrammerException e) {
+            } catch (InvalidTokenizerException e) {
+                // Output a message to the console for failure
+                System.out.println("\t\t************** invalid file **************");
+                // if so print out a formatted error message
+                Position pos = e.getPos();
+                String msg = String.format("%d:%d:>>>>> Illegal character '%c'",
+                    pos.lineNumber, pos.linePosition,
+                    pos.charAt);
+                System.out.print(msg);
+            }catch (InvalidGrammerException e) {
                 // Output a message to the console for failure
                 System.out.println("\t\t************** invalid file **************");
                 System.out.println(e);

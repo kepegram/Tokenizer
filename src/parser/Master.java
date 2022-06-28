@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import parser.grammer.Grammer;
 import parser.grammer.InvalidGrammerException;
+import parser.grammer.InvalidTokenizerException;
 import parser.grammer.Program;
 import parser.tokenizer.RewindableTokenizer;
 import parser.tokenizer.RewindableTokenizerIMPL;
@@ -75,7 +76,11 @@ public class Master {
                     e.printStackTrace();
                 }
 
-            } catch (InvalidGrammerException e) {
+            } catch (InvalidTokenizerException e) {
+                // Output a message to the console for failure
+                System.out.println("\t\t************** invalid file **************");
+                System.out.println(e);
+            }catch (InvalidGrammerException e) {
                 // Output a message to the console for failure
                 System.out.println("\t\t************** invalid file **************");
                 System.out.println(e);

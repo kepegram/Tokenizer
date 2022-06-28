@@ -4,23 +4,42 @@ import java.util.Arrays;
 import parser.tokenizer.RewindableTokenizer;
 import parser.tokenizer.Tokenizer;
 
+// functions needed and used to tokenize and parse the file and return according values
 public abstract class GrammerElement {
     public abstract boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException;
 
-    protected static boolean testNextKindEquals(String expected, Tokenizer toks)  throws InvalidGrammerException, IOException{
+    protected static boolean testNext(Tokenizer toks)   throws InvalidTokenizerException, IOException{
         toks.next();
-        String actual = toks.kind();
-        return expected.equals(actual);
+        if(toks.isError()) {
+            throw new InvalidTokenizerException("", toks.position());
+        }
+
+        return true;
     }
 
-    protected static boolean testNextKindNot(String expected, Tokenizer toks)  throws InvalidGrammerException, IOException{
+    protected static boolean testNextKindEquals(String expected, Tokenizer toks)  throws InvalidTokenizerException, IOException{
+        if(testNext(toks)) {
+            String actual = toks.kind();
+            return expected.equals(actual);
+        }
+
+        return false;
+    }
+
+    protected static boolean testNextKindNot(String expected, Tokenizer toks)  throws InvalidTokenizerException, IOException{
         toks.next();
         String actual = toks.kind();
         return !expected.equals(actual);
     }
 
-    protected static boolean testNextKindNotIn(String[] expectedValues, Tokenizer toks)  throws InvalidGrammerException, IOException{
+    protected static boolean testNextKindNotIn(String[] expectedValues, Tokenizer toks)  throws InvalidTokenizerException, IOException{
         return !testNextKindIn(expectedValues, toks);
+    }
+
+    protected static boolean testNextKindIn(String[] expectedValues, Tokenizer toks)  throws InvalidTokenizerException, IOException{
+        toks.next();
+        String actual = toks.kind();
+        return Arrays.asList(expectedValues).contains(actual);
     }
 
     protected static void assertNextKindNotIn(String[] expectedValues, Tokenizer toks)  throws InvalidGrammerException, IOException{
@@ -40,12 +59,6 @@ public abstract class GrammerElement {
                 String.format("expected kind is '%s', found '%s'", expected, actual), 
                 toks.position());
         }
-    }
-
-    protected static boolean testNextKindIn(String[] expectedValues, Tokenizer toks)  throws InvalidGrammerException, IOException{
-        toks.next();
-        String actual = toks.kind();
-        return Arrays.asList(expectedValues).contains(actual);
     }
 
     protected static void assertNextKindIn(String[] expectedValues, Tokenizer toks)  throws InvalidGrammerException, IOException{

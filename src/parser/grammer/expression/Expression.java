@@ -20,6 +20,8 @@ public class Expression extends GrammerElement {
         SimpleExpression simp = this.rootSimpleExpression;
         SimpleExpression parent = null;
         String linkingRelationalOperator = null;
+
+        // if relationoperator, added to the child/next link in chain
         while(simp.read(toks)) {
             if(parent != null) {
                 parent.addChild(simp, linkingRelationalOperator);
@@ -37,6 +39,7 @@ public class Expression extends GrammerElement {
         return isValid();
     }
     
+    // created to validate the expression against the grammer
     public boolean isValid() {
         SimpleExpression cur = this.rootSimpleExpression;
         String opStr = null;

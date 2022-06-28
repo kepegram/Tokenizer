@@ -9,11 +9,13 @@ class Body extends GrammerElement {
     private final List<Declaration> declarations;
     private final List<Statement> statements;
 
+    // collection of declarations and statements from grammer
     public Body() {
         this.declarations = new ArrayList<>();
         this.statements = new ArrayList<>();
     }
 
+    // follows order of grammer
     @Override
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
 

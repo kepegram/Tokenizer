@@ -12,7 +12,7 @@ abstract class Statement extends GrammerElement{
         @Override
         public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
 
-            // first test if the next lexeme is a part of this statement 
+            // first test if the next lexeme is a part of this statement if not rewinds
             if(!testNextKindNotIn(Grammer.STATEMENT_TERMINATORS_KINDS, toks)) {
                 toks.rewind();
                 return false;
@@ -23,6 +23,8 @@ abstract class Statement extends GrammerElement{
             String kind = toks.kind();
             toks.rewind(); // so the specific statement can validate
             Position expressionStartingPosition = toks.position();
+            
+            // expresses the four known statements provided by the grammer and assigns it by the keyword
             switch(kind) {
                 case Grammer.IDENTIFIER_KIND:
                     stmnt = new AssignmentStatement();
@@ -40,13 +42,17 @@ abstract class Statement extends GrammerElement{
                     break;
             }
 
-            if(stmnt == null || !stmnt.read(toks)) {
-                throw new InvalidGrammerException("unknown statement type", expressionStartingPosition);
+            if(stmnt == null) {
+                throw new InvalidTokenizerException("unknown statement type", expressionStartingPosition);
+            }
+
+            if(!stmnt.read(toks)) {
+                throw new InvalidTokenizerException("error parsing statement", expressionStartingPosition);
             } 
             
             this.statement = stmnt;
 
-            // remove any final semicolon
+            // remove any final semicolon which are optional for statements
             if(!testNextKindEquals(";", toks)) {
                 toks.rewind();
             }
@@ -118,7 +124,7 @@ class ConditionalStatement extends Statement {
         // read the predicate Expression
         this.startPredicatePos = toks.position();
         if(!this.predicateExpression.read(toks)) {
-            throw new InvalidGrammerException("invalid expression", startPredicatePos);
+            throw new InvalidTokenizerException("invalid expression", startPredicatePos);
         }
 
         // contains a then
@@ -127,7 +133,7 @@ class ConditionalStatement extends Statement {
         // read the body
         this.startBodyPos = toks.position();
         if(!this.body.read(toks)) {
-            throw new InvalidGrammerException("invalid conditional body", startBodyPos);
+            throw new InvalidTokenizerException("invalid conditional body", startBodyPos);
         }
 
         assertNextKindIn(GrammerString, toks);
@@ -136,7 +142,7 @@ class ConditionalStatement extends Statement {
             this.elseBody = new Body();
             this.startElseBodyPos = toks.position();
             if(!this.elseBody.read(toks)) {
-                throw new InvalidGrammerException("invalid conditional else body", startElseBodyPos);
+                throw new InvalidTokenizerException("invalid conditional else body", startElseBodyPos);
             }
         } else {
             toks.rewind();
@@ -177,7 +183,7 @@ class IterativeStatement extends Statement {
 
         Position startPredicatePos = toks.position();
         if(!this.predicateExpression.read(toks)) {
-            throw new InvalidGrammerException("invalid expression", startPredicatePos);
+            throw new InvalidTokenizerException("invalid expression", startPredicatePos);
         }
 
         // contains a do
@@ -185,7 +191,7 @@ class IterativeStatement extends Statement {
 
         Position startBodyPos = toks.position();
         if(!this.body.read(toks)) {
-            throw new InvalidGrammerException("invalid conditional body", startBodyPos);
+            throw new InvalidTokenizerException("invalid conditional body", startBodyPos);
         }
 
         assertNextKindEquals(Grammer.OD_KIND, toks);

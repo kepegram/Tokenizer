@@ -1,7 +1,6 @@
 package parser.tokenizer;
 import java.io.BufferedReader;
 import java.io.IOException;
-
 import parser.grammer.Grammer;
 
 enum LexemeType {
