@@ -1,0 +1,11 @@
+program bad_expression:
+   int a;
+   int b;
+   if4 a < b then5
+     2int b;
+     b := 2 * a
+   5else
+     bool b;
+     b := 2 * a
+   fii
+end

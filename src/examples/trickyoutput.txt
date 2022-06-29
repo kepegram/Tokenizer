@@ -1,0 +1,36 @@
+1:1:'program' 
+1:9:'IDENTIFIER'  bad_expression
+1:23:':' 
+:2:4:'int' 
+:2:8:'IDENTIFIER' a
+2:9:';' 
+3:4:'int' 
+3:8:'IDENTIFIER'  b
+3:9:';' 
+4:4:'IDENTIFIER' if4
+4:8:'IDENTIFIER' a
+4:10:'<' 
+4:12:'IDENTIFIER' b
+4:14:'IDENTIFIER' then5
+5:6:'NUM' 2 
+5:7:'int' 
+5:11:'IDENTIFIER' b
+5:12:';'
+6:6:'IDENTIFIER' b
+6:8:':='
+6:11:'NUM' 2
+6:13:'*'
+6:15:'IDENTIFIER' a
+7:4:'NUM' 5
+7:5:'else' 
+8:6:'bool' 
+8:11:'IDENTIFIER' b
+8:12:';' 
+9:6:'IDENTIFIER' b
+9:8:':='
+9:11:'NUM' 2
+9:13:'*'
+9:15:'IDENTIFIER' a
+10:4:'IDENTIFIER' fii
+11:1:'end'
+11:4:'end-of-text'

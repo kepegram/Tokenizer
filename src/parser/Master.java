@@ -14,6 +14,7 @@ import parser.tokenizer.RewindableTokenizerIMPL;
 import parser.tokenizer.Tokenizer;
 import parser.tokenizer.TokenizerIMPL;
 
+// master java file used to tokenize and parse
 public class Master {
     // prompt the user for a file name if none is provided
     private static String getFileName(String fileName) {
@@ -45,7 +46,7 @@ public class Master {
                 try (BufferedReader reader2 = new BufferedReader(new FileReader(fileName))){
 
                     // create a Tokenizer object from our buffered reader
-                    Tokenizer tokenizer = new RewindableTokenizerIMPL(new TokenizerIMPL(reader));
+                    Tokenizer tokenizer = new RewindableTokenizerIMPL(new TokenizerIMPL(reader2));
         
                     // start off the tokenizer (read first token)
                     tokenizer.next();

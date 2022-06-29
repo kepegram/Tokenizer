@@ -9,6 +9,7 @@ import parser.tokenizer.RewindableTokenizerIMPL;
 import parser.tokenizer.Tokenizer;
 import parser.tokenizer.TokenizerIMPL;
 
+// test file used to just test the tokenizer
 public class TokenizerTester 
 {
     // prompt the user for a file name if none is provided

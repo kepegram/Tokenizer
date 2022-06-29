@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
-
 import parser.grammer.InvalidGrammerException;
 import parser.grammer.InvalidTokenizerException;
 import parser.grammer.Program;
@@ -13,7 +12,8 @@ import parser.tokenizer.RewindableTokenizer;
 import parser.tokenizer.RewindableTokenizerIMPL;
 import parser.tokenizer.TokenizerIMPL;
 
-public class Main {
+// test file used to just test the parser
+public class ParserTester {
     // prompt the user for a file name if none is provided
     private static String getFileName(String fileName) {
         if(fileName != null) return fileName;
