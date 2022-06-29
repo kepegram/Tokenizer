@@ -1,13 +1,13 @@
 The syntax
 ----------
 
-x Program  =  "program"  Identifier  ":"  Body  "end" .
+Program  =  "program"  Identifier  ":"  Body  "end" .
 
-x Body  =  [ Declarations ]  Statements .
+Body  =  [ Declarations ]  Statements .
 
-x Declarations  =  Declaration { Declaration } .
+Declarations  =  Declaration { Declaration } .
 
-x Declaration  =  ( "bool" | "int" )  Identifier ";" .
+Declaration  =  ( "bool" | "int" )  Identifier ";" .
 
 Statements  =  Statement { ";" Statement } .
 
