@@ -9,4 +9,5 @@ public interface Tokenizer {
     Position position();
     boolean isError();
     String tokenToString();
+    
 }

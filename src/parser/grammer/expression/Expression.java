@@ -17,14 +17,14 @@ public class Expression extends GrammerElement {
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
 
         // An expression is a collection of SimpleExpressions linked by relational operators
-        SimpleExpression simp = this.rootSimpleExpression;
+        SimpleExpression simpl = this.rootSimpleExpression;
         SimpleExpression parent = null;
         String linkingRelationalOperator = null;
 
-        // if relationoperator, added to the child/next link in chain
-        while(simp.read(toks)) {
+        // if relational operator, add to the child/next link in chain
+        while(simpl.read(toks)) {
             if(parent != null) {
-                parent.addChild(simp, linkingRelationalOperator);
+                parent.addChild(simpl, linkingRelationalOperator);
             }
 
             // check if this simple expression is followed by a relational operator
@@ -33,8 +33,8 @@ public class Expression extends GrammerElement {
                 break;
             }
             linkingRelationalOperator = toks.kind();
-            parent = simp;
-            simp = new SimpleExpression();
+            parent = simpl;
+            simpl = new SimpleExpression();
         }
         return isValid();
     }

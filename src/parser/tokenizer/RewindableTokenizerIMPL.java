@@ -2,9 +2,9 @@ package parser.tokenizer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import parser.grammer.Grammer;
 
+// intakes the information of the current token/lexeme
 class LexemeInfo {
     String kind;
     Object value;
@@ -17,6 +17,10 @@ class LexemeInfo {
     }
 }
 
+/* 
+where the rewindable tokenizer is created. used for when parsing, if the current token isn't a grammer element, 
+it rewinds until one is found. if not, terminates program.
+*/
 public class RewindableTokenizerIMPL implements RewindableTokenizer {
 
     private final List<LexemeInfo> lexemeList;

@@ -8,10 +8,10 @@ import parser.tokenizer.Tokenizer;
 public abstract class GrammerElement {
     public abstract boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException;
 
-    protected static boolean testNext(Tokenizer toks)   throws InvalidTokenizerException, IOException{
+    protected static boolean testNext(Tokenizer toks) throws InvalidTokenizerException, IOException{
         toks.next();
         if(toks.isError()) {
-            throw new InvalidTokenizerException("", toks.position());
+            throw new InvalidTokenizerException("Expected INTEGER", toks.position());
         }
 
         return true;

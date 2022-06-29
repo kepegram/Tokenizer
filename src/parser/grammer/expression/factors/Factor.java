@@ -18,11 +18,15 @@ final class BooleanLiteralFactor implements FactorValue{
             throw new RuntimeException("Need Boolean for Boolean Literal");
         }
     }
-    public Boolean getValue() {return value;}
+    public Boolean getValue() {
+        return value;
+    }
+
     @Override
     public String getType() {
         return TYPE;
     }
+
     @Override
     public boolean isValid() {
         return value != null;
@@ -37,10 +41,12 @@ final class IntegerLiteralFactor implements FactorValue{
         if(value instanceof Integer) {
             this.value = (Integer) value;
         } else {
-            throw new RuntimeException("Need Integer for Boolean Literal");
+            throw new RuntimeException("Need Integer for Integer Literal");
         }
     }
-    public Integer getValue() {return value;}
+    public Integer getValue() {
+        return value;
+    }
     @Override
     public String getType() {
         return TYPE;
@@ -55,8 +61,12 @@ final class IntegerLiteralFactor implements FactorValue{
 final class IdentifierFactor implements FactorValue{
     public final static String TYPE = "Identifier";
     private final String value;
-    public IdentifierFactor(String value) {this.value = value;}
-    public String getValue() {return value;}
+    public IdentifierFactor(String value) {
+        this.value = value;
+    }
+    public String getValue() {
+        return value;
+    }
     @Override
     public String getType() {
         return TYPE;
@@ -70,8 +80,12 @@ final class IdentifierFactor implements FactorValue{
 final class ExpressionFactor extends GrammerElement implements FactorValue{
     public final static String TYPE = "ExpressionFactor";
     private final Expression value;
-    public ExpressionFactor(Expression value) {this.value = value;}
-    public Expression getValue() {return value;}
+    public ExpressionFactor(Expression value) {
+        this.value = value;
+    }
+    public Expression getValue() {
+        return value;
+    }
     @Override
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
         return value.read(toks);
@@ -100,7 +114,7 @@ public class Factor extends GrammerElement {
 
     @Override
     public boolean read(RewindableTokenizer toks) throws InvalidGrammerException, IOException {
-        // take care of any optional Unary operator in front of it
+        // takes care of any optional Unary operator in front of it
         if(testNextKindIn(Grammer.UNARY_OPERATORS, toks)) {
             this.optionalUnaryOp = toks.kind();
             toks.next();

@@ -30,7 +30,7 @@ class SimpleExpression extends GrammerElement {
                 parent.addChild(curTerm, linkingAdditiveOperator);
             }
 
-            // check if this simple expression is followed by a relational operator
+            // check if this simple expression is followed by a additive operator
             if(!testNextKindIn(Grammer.ADDITIVE_OPERATORS, toks)) {
                 toks.rewind();
                 break;

@@ -3,16 +3,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import parser.grammer.Grammer;
 
-enum LexemeType {
-    ID, NUM
-}
-
 public class TokenizerIMPL implements Tokenizer {
 
     private BufferedReader reader;
     private int lineNumber, linePosition;
     private String line;
-
     private boolean isEOF;
     private boolean isError;
     public String currentToken;
@@ -20,6 +15,7 @@ public class TokenizerIMPL implements Tokenizer {
     private String kind;
     private Object value;
 
+    // initializing
     public TokenizerIMPL (BufferedReader reader) throws IOException{
         this.reader = reader;
         this.lineNumber = -1;
@@ -34,6 +30,7 @@ public class TokenizerIMPL implements Tokenizer {
         nextLine();
     }
     
+    // moves to the next token in the file. if a valid token, inputs to a string builder which is then given to the terminal
     public void next() throws IOException {
 
         this.currentToken = null;
@@ -112,16 +109,11 @@ public class TokenizerIMPL implements Tokenizer {
                 if(builder.length() > 0 && !isError) {
                     this.currentToken = builder.toString();
                 }
-
-                // System.out.println(String.format(
-                //     "(%s, %s, %d, %d)",
-                //     kind(), value(),
-                //     position().lineNumber, position().linePosition
-                // ));
             }
         }
     }
 
+    // return the kind of token read
     public String kind() {
         if(this.currentToken == null) {
             if(this.isEOF) return Grammer.EOF;
@@ -132,6 +124,7 @@ public class TokenizerIMPL implements Tokenizer {
         return kind;
     }
 
+    // returns the value of the token read whether that be a ID or NUM
     public Object value() {
         if(this.currentToken == null) {
             throw new RuntimeException("Not ready");
@@ -140,6 +133,7 @@ public class TokenizerIMPL implements Tokenizer {
         return value;
     }
 
+    // returns position of the lexeme/token read
     public Position position() {
         if(this.startPosition == null) {
             throw new RuntimeException("Not ready");
@@ -148,15 +142,18 @@ public class TokenizerIMPL implements Tokenizer {
         return this.startPosition;
     }
 
+    // in the case of an error tokenizing the document
     public boolean isError() {
         return isError;
     }
 
+    // toString function used for console output. uses decimal and string formats to construct console output
     public String tokenToString() {
         return String.format("%d:%d:'%s' %s",
         position().lineNumber, position().linePosition,
         kind(), (value() != null)?value():"");
     }
+    
     private boolean isStartComment() {
         // if no line available - or we are at the end of the line
         if(line != null && linePosition < line.length() -1) {
@@ -178,8 +175,8 @@ public class TokenizerIMPL implements Tokenizer {
         }
     }
 
+    // if no line available - or we are at the end of the line
     private boolean nextChar() throws IOException{
-        // if no line available - or we are at the end of the line
         linePosition++;
         if(line == null || linePosition >= line.length()) {
             nextLine();
@@ -189,8 +186,9 @@ public class TokenizerIMPL implements Tokenizer {
         return true;
     }
 
+    // if no line available - or we are at the end of the line
     private char peekNextChar() {
-        // if no line available - or we are at the end of the line
+        
         if(line != null && linePosition < line.length()) {
             return line.charAt(linePosition);
         }
@@ -208,6 +206,7 @@ public class TokenizerIMPL implements Tokenizer {
         }
         return false;
     }
+    
     private boolean isSeparator() {
         char ch = peekNextChar();
         return isSeparator(ch);
